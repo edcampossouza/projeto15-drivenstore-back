@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { registerUserSchema, loginSchema } from '../schemas/authSchemas'
+import { registerUserSchema, loginSchema } from '../schemas/authSchemas.js'
+import { validateSchema } from '../middlewares/validateSchemas.js'
+import { signIn, signUp } from '../controllers/authControllers.js'
 
 
-const authRouter = Router()
+const authRoutes = Router()
 
-authRouter.post("/sign-up", validateSchema(registerUserSchema) ,signUp)
-authRouter.post("/", validateSchema(loginSchema),signIn)
+authRoutes.post("/sign-up", validateSchema(registerUserSchema) ,signUp)
+authRoutes.post("/sign-in", validateSchema(loginSchema),signIn)
 
-export default authRouter
+export default authRoutes
