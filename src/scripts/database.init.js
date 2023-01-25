@@ -40,6 +40,16 @@ const books = [
     downloadLink:
       "https://www.amazon.com.br/Aprendendo-Node-Usando-JavaScript-servidor-ebook/dp/B07S9GB1Y9/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=&sr=",
   },
+  {
+    title: "C++ Programming: From Problem Analysis to Program Design",
+    author: "D. S. Malik ",
+    synopsis: `Malik's time-tested, student-centered methodology incorporates a strong focus on problem-solving with full-code examples that vividly demonstrate the hows and whys of applying programming concepts and utilizing C++ to work through a problem.`,
+    cover:
+      "https://m.media-amazon.com/images/P/1337102083.01._SCLZZZZZZZ_SX500_.jpg",
+    price: 100.0,
+    type: "physical",
+    stock: 4,
+  },
 ];
 
 async function insertBooks() {
@@ -52,8 +62,13 @@ async function insertBooks() {
         error.details.map((err) => err.message)
       );
     } else {
-      await db.collection("books").insertOne(value);
-      count++;
+      const exists = await db
+        .collection("books")
+        .findOne({ title: book.title });
+      if (!exists) {
+        await db.collection("books").insertOne(value);
+        count++;
+      }
     }
   }
   console.log(`inseriu ${count} livros`);

@@ -34,7 +34,6 @@ export async function postCartItem(req, res) {
 export async function deleteCartItem(req, res) {
   const { cartItemId } = req.params;
   const { userId } = res.locals.session;
-  
 
   try {
     const result = await db
@@ -47,4 +46,8 @@ export async function deleteCartItem(req, res) {
   } catch (error) {
     return res.status(500).send(error.message);
   }
+}
+
+export async function checkout(req, res) {
+  return res.send("em implementacao")
 }
