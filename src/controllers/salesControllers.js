@@ -128,11 +128,20 @@ export async function checkout(req, res) {
 
 export async function getUserCart(req, res) {
   const { userId } = res.locals.session;
-
-  const userCart = await db
-    .collection("cart")
-    .find({ userID: ObjectId(userId) })
-    .toArray();
-  console.log(userCart);
-  return res.send(userCart);
+  try {
+    const userCart = await db
+      .collection("cart")
+      .find({ userID: ObjectId(userId) })
+      .toArray();
+    // console.log(userCart);
+    for (const item of userCart) {
+      const book = await db.collection("books").findOne({ _id: item.bookID });
+      // console.log(book)
+      item.cover = book.cover;
+      item.title = book.title;
+    }
+    return res.send(userCart);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
 }
