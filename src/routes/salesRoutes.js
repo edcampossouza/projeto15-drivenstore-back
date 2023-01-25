@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   deleteCartItem,
+  getUserCart,
   postCartItem,
 } from "../controllers/salesControllers.js";
 import { authValidation } from "../middlewares/authMid.js";
@@ -17,5 +18,7 @@ salesRouter.post(
 );
 
 salesRouter.delete("/cart/:cartItemId", authValidation, deleteCartItem);
+
+salesRouter.get("/cart",  authValidation,getUserCart)
 
 export default salesRouter;

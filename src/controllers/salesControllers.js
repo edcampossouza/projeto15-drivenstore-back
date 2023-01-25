@@ -3,11 +3,12 @@ import db from "../config/database.js";
 
 export async function postCartItem(req, res) {
   const { bookID, quantity } = req.body;
+  console.log(req.body)
 
   try {
     const book = await db
       .collection("books")
-      .findOne({ _id: ObjectId(bookID) });
+      .findOne({ _id: ObjectId(bookID) });      
     if (!book) {
       return res.status(404).send("id de livro inválido");
     }
@@ -25,7 +26,7 @@ export async function postCartItem(req, res) {
       { upsert: true }
     );
 
-    return res.status(201).send("Ok");
+    return res.status(201).send("Item adicionado no carrinho com sucesso!");
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -47,4 +48,14 @@ export async function deleteCartItem(req, res) {
   } catch (error) {
     return res.status(500).send(error.message);
   }
+}
+
+export async function getUserCart(req, res) {
+
+  const {userId} = res.locals.session
+
+  const userCart = await db.collection("cart").find({userID: ObjectId(userId)}).toArray()
+  console.log(userCart)
+  return res.send(userCart)
+
 }

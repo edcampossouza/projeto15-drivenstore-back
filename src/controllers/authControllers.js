@@ -25,7 +25,7 @@ export async function signIn(req, res) {
     try {
         const result = await db.collection("sessions").findOne({ token })
 
-        return res.send({ token: result.token, name: result.user })
+        return res.send(result)
 
     } catch (error) {
         console.log(error)
