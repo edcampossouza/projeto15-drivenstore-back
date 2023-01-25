@@ -1,14 +1,24 @@
 import { ObjectId } from "mongodb";
 import db from "../config/database.js";
+import { cartItemSchema } from "../schemas/saleSchemas.js";
 
 export async function postCartItem(req, res) {
-  const { bookID, quantity } = req.body;
-  console.log(req.body)
+  const { error, value } = cartItemSchema.validate(req.body, {
+    abortEarly: false,
+    convert: true,
+  });
+
+  if (error) {
+    return res.status(422).send(error.details.map((e) => e.message));
+  }
+
+  const { bookID, quantity } = value;
+  console.log(req.body);
 
   try {
     const book = await db
       .collection("books")
-      .findOne({ _id: ObjectId(bookID) });      
+      .findOne({ _id: ObjectId(bookID) });
     if (!book) {
       return res.status(404).send("id de livro inválido");
     }
@@ -117,11 +127,12 @@ export async function checkout(req, res) {
 }
 
 export async function getUserCart(req, res) {
+  const { userId } = res.locals.session;
 
-  const {userId} = res.locals.session
-
-  const userCart = await db.collection("cart").find({userID: ObjectId(userId)}).toArray()
-  console.log(userCart)
-  return res.send(userCart)
-
+  const userCart = await db
+    .collection("cart")
+    .find({ userID: ObjectId(userId) })
+    .toArray();
+  console.log(userCart);
+  return res.send(userCart);
 }
