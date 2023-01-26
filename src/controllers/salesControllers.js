@@ -63,6 +63,12 @@ export async function deleteCartItem(req, res) {
 //podem ocorrer race conditions
 export async function checkout(req, res) {
   const { userId } = res.locals.session;
+  const { address, cardNumber, saveAddress } = req.body;
+
+  if (saveAddress) {
+    saveUserAddress(userId, address);
+  }
+
   try {
     const cartItems = await db
       .collection("cart")
@@ -115,12 +121,14 @@ export async function checkout(req, res) {
       totalPrice,
       books: orderItems,
       datetime: Date.now(),
+      address,
+      cardNumber: maskCard(cardNumber),
     };
 
     db.collection("orders").insertOne(order);
     db.collection("cart").deleteMany({ userID: ObjectId(userId) });
 
-    return res.status(200).send(order);
+    return res.status(200).send("Pedido recebido com sucesso");
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -146,4 +154,30 @@ export async function getUserCart(req, res) {
   } catch (error) {
     return res.status(500).send(error.message);
   }
+}
+
+// salva o endereco informado para as proximas compras
+function saveUserAddress(userID, address) {
+  try {
+    db.collection("addresses").updateOne(
+      { userID: ObjectId(userID) },
+      {
+        $set: {
+          userID: ObjectId(userID),
+          address,
+        },
+      },
+      { upsert: true }
+    );
+  } catch (error) {
+    console.log("saveAddress: ", error.message);
+  }
+}
+
+// esconde os numeros do cartao
+// ex.: 123456 -> 1----6
+function maskCard(cardNumber) {
+  if (typeof cardNumber !== "string" || cardNumber.length !== 6)
+    return cardNumber;
+  return cardNumber.replace(/(\d)(\d{4})(\d)/, "$1----$3");
 }

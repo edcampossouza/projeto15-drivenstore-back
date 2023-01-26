@@ -6,19 +6,22 @@ import {
   checkout,
 } from "../controllers/salesControllers.js";
 import { authValidation } from "../middlewares/authMid.js";
+import { checkoutInfo } from "../schemas/saleSchemas.js";
+import { validateSchema } from "../middlewares/validateSchemas.js";
 
 const salesRouter = Router();
 
-salesRouter.post(
-  "/cart",
-  authValidation,
-  postCartItem
-);
+salesRouter.post("/cart", authValidation, postCartItem);
 
 salesRouter.delete("/cart/:cartItemId", authValidation, deleteCartItem);
 
-salesRouter.post("/checkout", authValidation, checkout);
+salesRouter.post(
+  "/checkout",
+  authValidation,
+  validateSchema(checkoutInfo),
+  checkout
+);
 
-salesRouter.get("/cart",  authValidation,getUserCart)
+salesRouter.get("/cart", authValidation, getUserCart);
 
 export default salesRouter;
