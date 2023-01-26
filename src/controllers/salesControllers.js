@@ -210,3 +210,22 @@ export async function getUserOrders(req, res) {
     return res.status(500).send(error.message);
   }
 }
+
+export async function getOrderDetails(req, res) {
+  const { userId } = res.locals.session;
+  const { orderId } = req.params;
+
+  try {
+    const order = await db
+      .collection("orders")
+      .findOne({ userId: ObjectId(userId), _id: ObjectId(orderId) });
+    for (const item of order.books) {
+      const book = await db.collection("books").findOne({ _id: item.bookId });
+      item.book = book;
+    }
+    if (!order) res.status(404).send("Não encontrado");
+    return res.status(200).send(order);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
