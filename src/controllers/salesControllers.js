@@ -139,6 +139,8 @@ export async function getUserCart(req, res) {
       // console.log(book)
       item.cover = book.cover;
       item.title = book.title;
+      item.price = book.price;
+      item.bookID = book._id;
     }
     return res.send(userCart);
   } catch (error) {
