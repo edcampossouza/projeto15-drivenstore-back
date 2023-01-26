@@ -4,6 +4,7 @@ import {
   getUserCart,
   postCartItem,
   checkout,
+  getUserAddress
 } from "../controllers/salesControllers.js";
 import { authValidation } from "../middlewares/authMid.js";
 import { checkoutInfo } from "../schemas/saleSchemas.js";
@@ -23,5 +24,7 @@ salesRouter.post(
 );
 
 salesRouter.get("/cart", authValidation, getUserCart);
+
+salesRouter.get("/address", authValidation, getUserAddress);
 
 export default salesRouter;

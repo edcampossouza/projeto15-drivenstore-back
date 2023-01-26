@@ -181,3 +181,17 @@ function maskCard(cardNumber) {
     return cardNumber;
   return cardNumber.replace(/(\d)(\d{4})(\d)/, "$1----$3");
 }
+
+// retorna o endereco salvo pelo usuario
+export async function getUserAddress(req, res) {
+  const { userId } = res.locals.session;
+  try {
+    const address = await db
+      .collection("addresses")
+      .findOne({ userID: ObjectId(userId) });
+    if (address) return res.status(200).send(address);
+    else res.status(404).send("Não encontrado");
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
