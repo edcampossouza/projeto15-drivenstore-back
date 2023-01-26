@@ -17,4 +17,5 @@ export const registerBookSchema = joi.object({
     is: "physical",
     then: joi.number().positive().allow(0).required(),
   }),
+  createdAt: joi.number().required(),
 });

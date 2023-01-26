@@ -13,6 +13,7 @@ const books = [
     price: 150.0,
     type: "physical",
     stock: 2,
+    createdAt: 1674593285500,
   },
   {
     title: "Aprendendo Node: Usando JavaScript no Servidor",
@@ -27,6 +28,7 @@ const books = [
     type: "digital",
     downloadLink:
       "https://www.amazon.com.br/Aprendendo-Node-Usando-JavaScript-servidor-ebook/dp/B07S9GB1Y9/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=&sr=",
+    createdAt: 1674593285500,
   },
   {
     title: "React - Aprenda Praticando:",
@@ -39,6 +41,7 @@ const books = [
     type: "digital",
     downloadLink:
       "https://www.amazon.com.br/Aprendendo-Node-Usando-JavaScript-servidor-ebook/dp/B07S9GB1Y9/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=&sr=",
+    createdAt: 1674593285500,
   },
   {
     title: "C++ Programming: From Problem Analysis to Program Design",
@@ -49,12 +52,37 @@ const books = [
     price: 100.0,
     type: "physical",
     stock: 4,
+    createdAt: 1674593285500,
+  },
+  {
+    title: "Git: Project Management for Developers and DevOps",
+    author: "Bernd Öggl ",
+    synopsis: `Get started with Git―today! Walk through installation and explore the variety of development environments available. Understand the concepts that underpin Git’s workflows, from branching to commits, and see how to use major platforms, like GitHub. Learn the ins and outs of working with Git for day-to-day development. Get your versioning under control!`,
+    cover: "https://m.media-amazon.com/images/I/51NPHOex4hL.jpg",
+    price: 237,
+    type: "physical",
+    stock: 4,
+    createdAt: 1674593285500,
+  },
+  {
+    title: "Fundamentos de HTML5 e CSS3",
+    author: "Maurício Samy Silva",
+    synopsis: `O livro Fundamentos de HTML5 e CSS3 tem o objetivo de fornecer aos iniciantes e estudantes da área de desenvolvimento web conceitos básicos e fundamentos da marcação HTML e estilização CSS, para a criação de sites, interfaces gráficas e aplicações para a web.`,
+    cover:
+      "https://m.media-amazon.com/images/P/B07J5YL6CK.01._SCLZZZZZZZ_SX500_.jpg",
+    price: 48.44,
+    type: "physical",
+    stock: 4,
   },
 ];
 
 async function insertBooks() {
   let count = 0;
   for (const book of books) {
+    if (!book.createdAt) {
+      const date = new Date();
+      book.createdAt = date.getTime();
+    }
     const { error, value } = registerBookSchema.validate(book);
     if (error) {
       console.error(
