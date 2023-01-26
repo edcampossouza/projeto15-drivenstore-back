@@ -3,7 +3,6 @@ import db from "../config/database.js";
 
 export async function getBooks(req, res) {
   const { category } = req.query;
-  console.log(category);
   const books = await db.collection("books").find({}).toArray();
 
   // ordenar por ordem de mais vendido
@@ -37,7 +36,7 @@ export async function getBookById(req, res) {
   }
 }
 
-// retorna um array com as vendas de cada livro
+// retorna um objeto com as vendas de cada livro
 async function bookSalesTotals() {
   const orders = await db.collection("orders").find({}).toArray();
   const totals = orders.reduce((total, order) => {
