@@ -195,3 +195,18 @@ export async function getUserAddress(req, res) {
     return res.status(500).send(error.message);
   }
 }
+
+export async function getUserOrders(req, res) {
+  const { userId } = res.locals.session;
+
+  try {
+    const orders = await db
+      .collection("orders")
+      .find({ userId: ObjectId(userId) })
+      .toArray();
+    if (orders) return res.status(200).send(orders);
+    else res.status(404).send("Não encontrado");
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
