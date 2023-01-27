@@ -30,6 +30,8 @@ export async function postCartItem(req, res) {
         $set: {
           bookID: ObjectId(bookID),
           userID: ObjectId(userId),
+        },
+        $inc: {
           quantity,
         },
       },
